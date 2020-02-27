@@ -22,7 +22,7 @@ pipeline {
                 echo " - deploy web content - "
                 sh "cp -r ./build/* /lean-ui"
 
-                sh " - done- "
+                echo " - done- "
             }
          }
 
