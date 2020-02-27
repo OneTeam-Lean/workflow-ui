@@ -28,5 +28,5 @@
 - Redux
 
 ## 项目基本命令
-- `yarn start` 启动本地服务
-- `yarn build` 构建项目
+- `npm start` 启动本地服务
+- `npm run build` 构建项目
