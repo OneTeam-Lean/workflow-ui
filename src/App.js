@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { Layout } from 'antd';
+import { Layout, Menu, Icon } from 'antd';
 import Designer from './wfd';
 
 const { Header, Footer, Sider, Content } = Layout;
@@ -41,6 +41,19 @@ function App() {
     return (
         <div>
             <Layout>
+                <Sider collapsible collapsed={false} trigger={null} style={{ "padding-top": "109px"}}>
+                    <div className="logo" />
+                    <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
+                        <Menu.Item key="1">
+                            <Icon type="pie-chart" />
+                            <span> 现有Workflow</span>
+                        </Menu.Item>
+                        <Menu.Item key="2">
+                            <Icon type="plus" />
+                            <span> 新增Workflow</span>
+                        </Menu.Item>
+                    </Menu>
+                </Sider>
               <Layout>
                 <Header style={{ color: "grey", "font-size": "large", "font-weight": "900" }}>Workflow Dashboard</Header>
                 <Content style={{ height: "calc(100vh - 135px)", bottom: "0", paddingTop: "100px" }}>
