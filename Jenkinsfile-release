@@ -1,0 +1,34 @@
+pipeline {
+   agent any
+
+   stages {
+      stage('release') {
+         steps {
+            git 'https://github.com/OneTeam-Lean/workflow-ui.git'
+
+            echo " - install npm dependencies - "
+            sh "npm install"
+
+            echo " - build web content- "
+            sh "npm run build"
+
+            echo " - backup web content - "
+            #sh "" #todo
+
+            echo " - clean web content - "
+            sh "rm -r /lean-ui/*"
+
+            echo " - deploy web content - "
+            sh "cp ./build/* /lean-ui"
+
+            sh " - done- "
+         }
+
+         post {
+            success {
+               echo "- Web content deploy completed. -"
+            }
+         }
+      }
+   }
+}
