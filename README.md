@@ -28,5 +28,6 @@
 - Redux
 
 ## 项目基本命令
+- `npm install` 安装依赖
 - `npm start` 启动本地服务
 - `npm run build` 构建项目
