@@ -6,22 +6,24 @@ pipeline {
          steps {
             git 'https://github.com/OneTeam-Lean/workflow-ui.git'
 
-            echo " - install npm dependencies - "
-            sh "npm install"
+            nodejs(nodeJSInstallationName: 'NodeJS13') {
+                echo " - install npm dependencies - "
+                sh "npm install"
 
-            echo " - build web content- "
-            sh "npm run build"
+                echo " - build web content- "
+                sh "npm run build"
 
-            echo " - backup web content - "
+                echo " - backup web content - "
 
 
-            echo " - clean web content - "
-            sh "rm -r /lean-ui/*"
+                echo " - clean web content - "
+                sh "rm -r /lean-ui/*"
 
-            echo " - deploy web content - "
-            sh "cp ./build/* /lean-ui"
+                echo " - deploy web content - "
+                sh "cp -r ./build/* /lean-ui"
 
-            sh " - done- "
+                sh " - done- "
+            }
          }
 
          post {
