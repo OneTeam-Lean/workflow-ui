@@ -36,3 +36,8 @@
     transform: rotate(360deg);
   }
 }
+
+.logo {
+  height: 140px;
+    background: url('assets/icons/logo.png') center center no-repeat;
+}

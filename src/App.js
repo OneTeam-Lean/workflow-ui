@@ -41,7 +41,7 @@ function App() {
     return (
         <div>
             <Layout>
-                <Sider collapsible collapsed={false} trigger={null} style={{ "padding-top": "109px"}}>
+                <Sider collapsible collapsed={false} trigger={null} style={{ height: "100vh"}}>
                     <div className="logo" />
                     <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
                         <Menu.Item key="1">
