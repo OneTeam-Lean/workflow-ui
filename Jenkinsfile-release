@@ -13,7 +13,7 @@ pipeline {
             sh "npm run build"
 
             echo " - backup web content - "
-            #sh "" #todo
+
 
             echo " - clean web content - "
             sh "rm -r /lean-ui/*"
