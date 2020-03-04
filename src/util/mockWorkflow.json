@@ -1,0 +1,146 @@
+{
+  "componentType": "WORKFLOW",
+  "status": null,
+  "id": "be4767b1-324e-400a-b670-6c5d53e24c20",
+  "name": "workflowName",
+  "lanes": [
+    {
+      "componentType": "LANE",
+      "status": null,
+      "id": null,
+      "name": "testLane",
+      "laneId": "laneId",
+      "componentIds": [
+        "startEventId",
+        "sequenceFlowId_1",
+        "autoTaskId",
+        "sequenceFlowId_2",
+        "manualTaskId",
+        "sequenceFlowId_3",
+        "endEventId"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "componentType": "START_EVENT",
+      "status": null,
+      "id": "startEventId",
+      "name": "startEvent"
+    },
+    {
+      "componentType": "SEQUENCE_FLOW",
+      "status": null,
+      "id": null,
+      "flowId": "sequenceFlowId_1",
+      "fromComponentId": "startEventId",
+      "toComponentId": "autoTaskId"
+    },
+    {
+      "componentType": "AUTO_TASK",
+      "status": "PENDING",
+      "id": "autoTaskId",
+      "name": "taskName",
+      "startTime": "2020-02-26T14:28:29.315",
+      "endTime": "2020-02-26T14:28:29.315"
+    },
+    {
+      "componentType": "SEQUENCE_FLOW",
+      "status": null,
+      "id": null,
+      "flowId": "sequenceFlowId_2",
+      "fromComponentId": "autoTaskId",
+      "toComponentId": "manualTaskId"
+    },
+    {
+      "componentType": "MANUAL_TASK",
+      "status": "PENDING",
+      "id": "manualTaskId",
+      "name": "manualTaskName",
+      "startTime": "2020-02-26T14:28:29.315",
+      "endTime": "2020-02-26T14:28:29.315"
+    },
+    {
+      "componentType": "SEQUENCE_FLOW",
+      "status": null,
+      "id": null,
+      "flowId": "sequenceFlowId_3",
+      "fromComponentId": "manualTaskId",
+      "toComponentId": "endEventId"
+    },
+    {
+      "componentType": "END_EVENT",
+      "status": null,
+      "id": "endEventId",
+      "name": "endEvent"
+    }
+  ],
+  "diagrams": [
+    {
+      "diagramType": "SHAPE",
+      "componentId": "startEventId",
+      "size": {
+        "width": 5,
+        "height": 10
+      },
+      "position": {
+        "position_x": 130,
+        "position_y": 40
+      }
+    },
+    {
+      "diagramType": "EDGE",
+      "flowId": "sequenceFlowId_1",
+      "sourceAnchor": 1,
+      "targetAnchor": 2
+    },
+    {
+      "diagramType": "SHAPE",
+      "componentId": "autoTaskId",
+      "size": {
+        "width": 10,
+        "height": 20
+      },
+      "position": {
+        "position_x": 230,
+        "position_y": 40
+      }
+    },
+    {
+      "diagramType": "EDGE",
+      "flowId": "sequenceFlowId_2",
+      "sourceAnchor": 1,
+      "targetAnchor": 3
+    },
+    {
+      "diagramType": "EDGE",
+      "flowId": "sequenceFlowId_3",
+      "sourceAnchor": 4,
+      "targetAnchor": 1
+    },
+    {
+      "diagramType": "SHAPE",
+      "componentId": "manualTaskId",
+      "size": {
+        "width": 10,
+        "height": 20
+      },
+      "position": {
+        "position_x": 380,
+        "position_y": 40
+      }
+    },
+    {
+      "diagramType": "SHAPE",
+      "componentId": "endEventId",
+      "size": {
+        "width": 5,
+        "height": 10
+      },
+      "position": {
+        "position_x": 480,
+        "position_y": 40
+      }
+    }
+  ]
+}
