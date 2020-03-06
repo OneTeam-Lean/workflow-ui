@@ -64,7 +64,7 @@ class App extends React.Component {
                         </Menu>
                     </Sider>
                     <Layout>
-                        <Header style={{color: 'grey', 'font-size': 'large', 'font-weight': '900'}}>Workflow
+                        <Header style={{color: 'grey', fontSize: 'large', fontWeight: '900'}}>Workflow
                             Dashboard</Header>
                         <Content style={{height: 'calc(100vh - 135px)', bottom: '0', paddingTop: '100px'}}>
                             <Form layout="inline" onSubmit={this.handleSubmit}>
@@ -82,7 +82,7 @@ class App extends React.Component {
                             </Form>
                             <Designer ref={(ref) => {this.designerRef = ref }} data={data} height={height} isView/>
                         </Content>
-                        <Footer style={{'text-align': 'center'}}>Workflow UI Created by 精益引擎</Footer>
+                        <Footer style={{textAlign: 'center'}}>Workflow UI Created by 精益引擎</Footer>
                     </Layout>
                 </Layout>
             </div>
