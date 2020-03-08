@@ -43,7 +43,7 @@ class Designer extends Component {
       if(this.graph){
         this.graph.changeData(this.initShape(this.props.data));
         this.graph.setMode(this.props.mode);
-        this.graph.emit('canvas:click');
+        // this.graph.emit('canvas:click');
         if(this.cmdPlugin){
           this.cmdPlugin.initPlugin(this.graph);
         }

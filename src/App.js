@@ -6,8 +6,9 @@ import Designer from './wfd';
 import axios from 'axios';
 import  {isEmpty} from 'lodash'
 import { rawToData } from './util/protocolUtil';
+import SideBar from './wfd/components/SideBar';
 
-const {Header, Footer, Sider, Content} = Layout;
+const {Header, Footer, Content} = Layout;
 const demoData = {
     nodes: [{id: 'startNode', x: 50, y: 200, label: '', clazz: 'start',},
             {id: 'taskNode', x: 150, y: 200, label: '审批', clazz: 'scriptTask',},
@@ -19,7 +20,7 @@ const demoData = {
     ],
 };
 
-const height = 150;
+const height = 590;
 class App extends React.Component {
     designerRef= undefined;
 
@@ -50,23 +51,24 @@ class App extends React.Component {
         return (
             <div>
                 <Layout>
-                    <Sider collapsible collapsed={false} trigger={null} style={{height: '100vh'}}>
-                        <div className="logo"/>
-                        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-                            <Menu.Item key="1">
-                                <Icon type="pie-chart"/>
-                                <span> 现有Workflow</span>
-                            </Menu.Item>
-                            <Menu.Item key="2">
-                                <Icon type="plus"/>
-                                <span> 新增Workflow</span>
-                            </Menu.Item>
-                        </Menu>
-                    </Sider>
+                    <SideBar />
                     <Layout>
-                        <Header style={{color: 'grey', fontSize: 'large', fontWeight: '900'}}>Workflow
-                            Dashboard</Header>
-                        <Content style={{height: 'calc(100vh - 135px)', bottom: '0', paddingTop: '100px'}}>
+                        <Header
+                            style={{
+                              color: 'grey',
+                              fontSize: 'large',
+                              fontWeight: '900'
+                            }}
+                        >
+                          Workflow Dashboard
+                        </Header>
+                        <Content
+                            style={{
+                                height: 'calc(100vh - 135px)',
+                                bottom: '0',
+                                paddingTop: '100px'
+                            }}
+                        >
                             <Form layout="inline" onSubmit={this.handleSubmit}>
                                 <Form.Item label="workflow id">
                                     {getFieldDecorator('workflowQuery')(<Input
@@ -82,7 +84,9 @@ class App extends React.Component {
                             </Form>
                             <Designer ref={(ref) => {this.designerRef = ref }} data={data} height={height} isView/>
                         </Content>
-                        <Footer style={{textAlign: 'center'}}>Workflow UI Created by 精益引擎</Footer>
+                        <Footer style={{textAlign: 'center'}}>
+                            Workflow UI Created by 精益引擎
+                        </Footer>
                     </Layout>
                 </Layout>
             </div>
