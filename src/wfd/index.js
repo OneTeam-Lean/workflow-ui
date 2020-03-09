@@ -17,6 +17,15 @@ import registerBehavior from './behavior'
 registerShape(G6);
 registerBehavior(G6);
 
+const minimap = new G6.Minimap({
+  size: [ 100, 100 ],
+  className: 'minimap',
+  type: 'delegate'
+});
+
+const editBehavior = ['zoom-canvas', 'drag-canvas', 'hoverNodeActived','hoverAnchorActived','dragNode','dragEdge',
+  'dragPanelItemAddNode','clickSelected','deleteItem','itemAlign','dragPoint'];
+
 class Designer extends Component {
   constructor(props) {
     super(props);
@@ -64,18 +73,33 @@ class Designer extends Component {
       const toolbar = new Toolbar({container:this.toolbarRef.current});
       const addItemPanel = new AddItemPanel({container:this.itemPanelRef.current});
       const canvasPanel = new CanvasPanel({container:this.pageRef.current});
-      plugins = [ this.cmdPlugin,toolbar,addItemPanel,canvasPanel ];
+      plugins = [this.cmdPlugin, toolbar, addItemPanel, canvasPanel];
     }
     this.graph = new G6.Graph({
-      plugins: plugins,
+      plugins: [...plugins, minimap],
       container: this.pageRef.current,
       height: height,
       width: width,
       modes: {
-        default: ['drag-canvas', 'clickSelected'],
-        view: [ ],
-        edit: ['drag-canvas', 'hoverNodeActived','hoverAnchorActived','dragNode','dragEdge',
-          'dragPanelItemAddNode','clickSelected','deleteItem','itemAlign','dragPoint'],
+        default: [
+            'drag-canvas',
+            'clickSelected',
+        ],
+        view: [],
+        edit: [...editBehavior,
+            {
+                type: 'tooltip', // 提示框
+                formatText(model) {
+                    console.info(model)
+                    // 提示框文本内容
+                    const text = 'id: ' + model.id;
+                    return text;
+                },
+                shouldUpdate: e => {
+                    return true;
+                },
+            },
+        ],
       },
       defaultEdge: {
         shape: 'flow-polyline-round',
