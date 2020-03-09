@@ -1,5 +1,7 @@
+import Utils from '@antv/util';
+
 export default function(G6){
-  const {mix,each,vec2} = G6.Util;
+  const {mix,each,MatrixUtil: { vec2 }} = Utils;
   G6.registerBehavior('itemAlign', {
     getDefaultCfg() {
       return {
@@ -28,7 +30,7 @@ export default function(G6){
       const cb = { x: bbox.x + bbox.width / 2, y: bbox.y + bbox.height };
       const lc = { x: bbox.x, y: bbox.y + bbox.height / 2 };
       const rc = { x: bbox.x + bbox.width, y: bbox.y + bbox.height / 2 };
-      const nodes = item._attrs.nodeId ? this.graph.getNodes().filter(n => n.get('id') !== item._attrs.nodeId) : this.graph.getNodes();
+      const nodes = item.attrs.nodeId ? this.graph.getNodes().filter(n => n.get('id') !== item.attrs.nodeId) : this.graph.getNodes();
       each(nodes, (node) => {
         const horizontalLines = [];
         const verticalLines = [];

@@ -7,20 +7,140 @@ import axios from 'axios';
 import  {isEmpty} from 'lodash'
 import { rawToData } from './util/protocolUtil';
 import SideBar from './wfd/components/SideBar';
+import workflowAPI from './api';
 
 const {Header, Footer, Content} = Layout;
 const demoData = {
-    nodes: [{id: 'startNode', x: 50, y: 200, label: '', clazz: 'start',},
-            {id: 'taskNode', x: 150, y: 200, label: '审批', clazz: 'scriptTask',},
-            {id: 'gatewayNode', x: 350, y: 200, label: '获取权限成功', clazz: 'gateway',},
-            {id: 'endNode', x: 450, y: 200, label: '', clazz: 'end',}],
-    edges: [{source: 'startNode', target: 'taskNode', sourceAnchor: 1, targetAnchor: 3, clazz: 'flow'},
-            {source: 'taskNode', target: 'gatewayNode', sourceAnchor: 1, targetAnchor: 3, clazz: 'flow'},
-            {source: 'gatewayNode', target: 'endNode', sourceAnchor: 1, targetAnchor: 3, clazz: 'flow'},
-    ],
+  "id": "be4767b1-324e-400a-b670-6c5d53e24c20",
+  "name": "workflowName",
+  "lanes": [
+    {
+      "id": null,
+      "name": "testLane",
+      "componentIds": null
+    }
+  ],
+  "components": [
+    {
+      "componentType": "Component",
+      "id": "startEventId",
+      "nextComponentIds": null
+    },
+    {
+      "componentType": "Component",
+      "id": null,
+      "nextComponentIds": null
+    },
+    {
+      "componentType": "Component",
+      "id": "autoTaskId",
+      "nextComponentIds": null
+    },
+    {
+      "componentType": "Component",
+      "id": null,
+      "nextComponentIds": null
+    },
+    {
+      "componentType": "Component",
+      "id": "manualTaskId",
+      "nextComponentIds": null
+    },
+    {
+      "componentType": "Component",
+      "id": null,
+      "nextComponentIds": null
+    },
+    {
+      "componentType": "Component",
+      "id": "endEventId",
+      "nextComponentIds": null
+    }
+  ],
+  "diagrams": [
+    {
+      "diagramType": "SHAPE",
+      "componentId": "startEventId",
+      "size": {
+        "width": 5,
+        "height": 10
+      },
+      "position": {
+        "position_x": 30,
+        "position_y": 40
+      }
+    },
+    {
+      "diagramType": "EDGE",
+      "flowId": "sequenceFlowId_1",
+      "sourceAnchor": 1,
+      "targetAnchor": 2
+    },
+    {
+      "diagramType": "SHAPE",
+      "componentId": "autoTaskId",
+      "size": {
+        "width": 10,
+        "height": 20
+      },
+      "position": {
+        "position_x": 30,
+        "position_y": 40
+      }
+    },
+    {
+      "diagramType": "EDGE",
+      "flowId": "sequenceFlowId_2",
+      "sourceAnchor": 1,
+      "targetAnchor": 3
+    },
+    {
+      "diagramType": "SHAPE",
+      "componentId": "autoTaskId",
+      "size": {
+        "width": 10,
+        "height": 20
+      },
+      "position": {
+        "position_x": 30,
+        "position_y": 40
+      }
+    },
+    {
+      "diagramType": "EDGE",
+      "flowId": "sequenceFlowId_3",
+      "sourceAnchor": 4,
+      "targetAnchor": 1
+    },
+    {
+      "diagramType": "SHAPE",
+      "componentId": "manualTaskId",
+      "size": {
+        "width": 10,
+        "height": 20
+      },
+      "position": {
+        "position_x": 30,
+        "position_y": 40
+      }
+    },
+    {
+      "diagramType": "SHAPE",
+      "componentId": "endEventId",
+      "size": {
+        "width": 5,
+        "height": 10
+      },
+      "position": {
+        "position_x": 30,
+        "position_y": 40
+      }
+    }
+  ],
+  "workflowExecutions": null
 };
 
-const height = 590;
+const height = 600;
 class App extends React.Component {
     designerRef= undefined;
 
@@ -35,14 +155,19 @@ class App extends React.Component {
 
     handleSubmit = (e, target) => {
         e.preventDefault();
-        console.log(e, target)
-        axios.get(`https://www.fastmock.site/mock/e0f98190bbbc0813bc919a3a0bee31c8/workflow/workflow`)
-             .then(res => {
-                 const workflowData = res.data;
-                 console.log(this.designerRef)
-                 ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(this.designerRef))
-                 this.setState({ workflowData: rawToData(workflowData) });
-             })
+        const { workflowQuery } = this.props.form.getFieldsValue();
+
+        axios.get(
+            `${workflowAPI.getWorkflow}/${workflowQuery || 'workflowName'}`,
+            // 'https://www.fastmock.site/mock/e0f98190bbbc0813bc919a3a0bee31c8/workflow/workflow'
+        ).then(res => {
+          console.log(this.designerRef);
+          ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(this.designerRef));
+          this.setState({ workflowData: rawToData(res.data) });
+        }).catch(e => {
+          // handle error
+          console.info(e);
+        })
     };
 
     render () {
@@ -66,15 +191,16 @@ class App extends React.Component {
                             style={{
                                 height: 'calc(100vh - 135px)',
                                 bottom: '0',
-                                paddingTop: '100px'
                             }}
                         >
                             <Form layout="inline" onSubmit={this.handleSubmit}>
-                                <Form.Item label="workflow id">
-                                    {getFieldDecorator('workflowQuery')(<Input
+                                <Form.Item style={{ width: '400px' }} label="请输入工作流名称">
+                                    {
+                                      getFieldDecorator('workflowQuery')(<Input
                                         type="text"
-                                        style={{ width: '65%', marginRight: '3%' }}
-                                    />)}
+                                        style={{ marginRight: '3%' }}
+                                      />)
+                                    }
                                 </Form.Item>
                                 <Form.Item>
                                     <Button type="primary" htmlType="submit">

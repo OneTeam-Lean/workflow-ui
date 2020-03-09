@@ -1,4 +1,3 @@
-const mockWorkflow = require('./mockWorkflow.json');
 const clazzMap = {
     'START_EVENT': 'start',
     'AUTO_TASK'  : 'scriptTask',
@@ -26,7 +25,7 @@ export function rawToData (rawData) {
     }));
     let resEdges = edges.map(edge => ({
         source      : edge['fromComponentId'],
-        target      : edge['toComponentId'],
+        target      : edge['nextComponentIds'][0],
         sourceAnchor: 1,
         targetAnchor: 3,
         clazz       : 'flow',
