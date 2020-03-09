@@ -90,10 +90,8 @@ class Designer extends Component {
             {
                 type: 'tooltip', // 提示框
                 formatText(model) {
-                    console.info(model)
                     // 提示框文本内容
-                    const text = 'id: ' + model.id;
-                    return text;
+                    return `工作流名称：${model.label || '暂无名称'}`;
                 },
                 shouldUpdate: e => {
                     return true;
