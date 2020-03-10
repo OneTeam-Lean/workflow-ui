@@ -38,8 +38,8 @@
 }
 
 .logo {
-  height: 140px;
-    background: url('assets/icons/logo.png') center center no-repeat;
+  height: 60px;
+  background: url('assets/icons/logo.png') center / contain no-repeat;
 }
 
 .g6-tooltip {
@@ -50,4 +50,12 @@
   background-color: rgba(255, 255, 255, 0.9);
   padding: 10px 8px;
   box-shadow: rgb(174, 174, 174) 0px 0px 10px;
+}
+
+.ant-layout-header {
+  padding: 0 24px;
+}
+
+.ant-btn-primary {
+  margin: 0 4px;
 }

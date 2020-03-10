@@ -180,7 +180,7 @@ class App extends React.Component {
                     <Layout>
                         <Header
                             style={{
-                              color: 'grey',
+                              color: 'white',
                               fontSize: 'large',
                               fontWeight: '900'
                             }}
@@ -194,11 +194,12 @@ class App extends React.Component {
                             }}
                         >
                             <Form layout="inline" onSubmit={this.handleSubmit}>
-                                <Form.Item style={{ width: '400px' }} label="请输入工作流名称">
+                                <Form.Item>
                                     {
                                       getFieldDecorator('workflowQuery')(<Input
-                                        type="text"
-                                        style={{ marginRight: '3%' }}
+                                          placeholder="请输入工作流名称"
+                                          type="text"
+                                          style={{ margin: '0 24px', width: '240px' }}
                                       />)
                                     }
                                 </Form.Item>
@@ -206,6 +207,7 @@ class App extends React.Component {
                                     <Button type="primary" htmlType="submit">
                                         查询
                                     </Button>
+                                    <Button type="primary">更新</Button>
                                 </Form.Item>
                             </Form>
                             <Designer ref={(ref) => {this.designerRef = ref }} data={data} height={height} isView/>

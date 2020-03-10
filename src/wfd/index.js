@@ -23,8 +23,19 @@ const minimap = new G6.Minimap({
   type: 'delegate'
 });
 
-const editBehavior = ['zoom-canvas', 'drag-canvas', 'hoverNodeActived','hoverAnchorActived','dragNode','dragEdge',
-  'dragPanelItemAddNode','clickSelected','deleteItem','itemAlign','dragPoint'];
+const editBehavior = [
+    'zoom-canvas',
+    'drag-canvas',
+    'hoverNodeActived',
+    'hoverAnchorActived',
+    'dragNode',
+    'dragEdge',
+    'dragPanelItemAddNode',
+    'clickSelected',
+    'deleteItem',
+    'itemAlign',
+    'dragPoint',
+];
 
 class Designer extends Component {
   constructor(props) {
@@ -57,7 +68,7 @@ class Designer extends Component {
           this.cmdPlugin.initPlugin(this.graph);
         }
         if(this.props.isView){
-          this.graph.fitView(5)
+          this.graph.fitView(5);
         }
       }
     }
@@ -88,9 +99,8 @@ class Designer extends Component {
         view: [],
         edit: [...editBehavior,
             {
-                type: 'tooltip', // 提示框
+                type: 'tooltip', // Node提示框
                 formatText(model) {
-                    // 提示框文本内容
                     return `工作流名称：${model.label || '暂无名称'}`;
                 },
                 shouldUpdate: e => {
@@ -105,7 +115,7 @@ class Designer extends Component {
     });
     this.graph.saveXML = (createFile = true) => exportXML(this.graph.save(),this.state.processModel,createFile);
     if(isView){
-      this.graph.setMode("view");
+      this.graph.setMode('view');
     }else{
       this.graph.setMode(mode);
     }

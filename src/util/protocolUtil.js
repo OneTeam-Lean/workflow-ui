@@ -24,6 +24,7 @@ export function rawToData (rawData) {
         y    : resDiagramsMap[node['id']]['position']['position_y'],
     }));
     let resEdges = edges.map(edge => ({
+        id          : edge['id'],
         source      : edge['fromComponentId'],
         target      : edge['nextComponentIds'][0],
         sourceAnchor: 1,
