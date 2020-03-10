@@ -1,6 +1,6 @@
 import editorStyle from "../util/defaultStyle";
 
-export default function (G6) {
+export default function (G6, updateDiagrams) {
   G6.registerBehavior('dragNode', {
     getDefaultCfg() {
       return {
@@ -102,6 +102,7 @@ export default function (G6) {
       this.point = null;
       this.origin = null;
       this.graph.emit('afternodedragend');
+      updateDiagrams(this.graph.cfg);
     },
     _updateItem(item, point) {
       if (this.graph.executeCommand) {

@@ -7,10 +7,10 @@ import hoverAnchorActived from './hoverAnchorActived'
 import hoverNodeActived from './hoverNodeActived'
 import itemAlign from './itemAlign'
 import dragPoint from "./dragPoint";
-export default function(G6){
+export default function(G6, updateWorkFlowDiagram){
   clickSelected(G6);
   deleteItem(G6);
-  dragNode(G6);
+  dragNode(G6, updateWorkFlowDiagram);
   dragEdge(G6);
   dragPanelItemAddNode(G6);
   hoverAnchorActived(G6);

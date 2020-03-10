@@ -146,6 +146,7 @@ class App extends React.Component {
 
     state = {
         workflowData: undefined,
+        rawData: undefined
 
     };
 
@@ -173,7 +174,40 @@ class App extends React.Component {
         }
     };
 
-    render () {
+    updateWorkFlowDiagram = graphConfig => {
+        const nodes = graphConfig.nodes.map(item => ({
+
+            diagramType: "SHAPE",
+            componentId: item._cfg.model.id,
+            size: {
+                width: item._cfg.model.size[0],
+                height: item._cfg.model.size[1]
+            },
+            position: {
+                position_x: item._cfg.model.x,
+                position_y: item._cfg.model.y
+            }
+
+        }));
+        const edges = graphConfig.edges.map(item => ({
+            diagramType: "EDGE",
+            flowId: item._cfg.id,
+            sourceAnchor: item._cfg.model.sourceAnchor,
+            targetAnchor: item._cfg.model.targetAnchor
+        }));
+
+        const diagrams = nodes.concat(edges);
+        const newRawData = {};
+        const request = Object.assign(newRawData, this.state.rawData);
+        const newR = Object.assign(newRawData, {diagrams: diagrams});
+
+        axios.put(`${workflowAPI.getWorkflow}`, request).then(res => {
+            console.log(res.status)
+        }).catch(e => console.info(e));
+
+    }
+
+    render() {
         const data = this.state.workflowData;
         const { getFieldDecorator } = this.props.form;
         return (

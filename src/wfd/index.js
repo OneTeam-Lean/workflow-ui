@@ -15,7 +15,6 @@ import ToolbarPanel from "./components/ToolbarPanel";
 import registerShape from './shape'
 import registerBehavior from './behavior'
 registerShape(G6);
-registerBehavior(G6);
 
 const tooltip = {
   type: 'tooltip', // Node提示框
@@ -95,6 +94,7 @@ class Designer extends Component {
   }
 
   componentDidMount() {
+    registerBehavior(G6, this.props.updateWorkFlowDiagram);
     const { isView,mode } = this.props;
     const height = this.props.height-1;
     const width = this.pageRef.current.offsetWidth;
