@@ -1,13 +1,11 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import './App.css';
 import {Layout, Menu, Icon, Form, Input, Select, Button} from 'antd';
-import Designer from './wfd';
-import axios from 'axios';
-import {isEmpty} from 'lodash'
-import {rawToData} from './util/protocolUtil';
+import { BrowserRouter, Route } from 'react-router-dom';
 import SideBar from './wfd/components/SideBar';
-import workflowAPI from './api';
+import ExistsWorkflow from './wfd/components/ExistsWorkflow';
+import Sample from './wfd/components/Sample';
+import './App.css';
 
 const {Header, Footer, Content} = Layout;
 const demoData = {
@@ -140,128 +138,36 @@ const demoData = {
     "workflowExecutions": null
 };
 
-const height = 600;
+export default function App() {
 
-class App extends React.Component {
-    designerRef = undefined;
-
-    state = {
-        workflowData: undefined,
-        rawData: undefined
-
-    };
-
-    componentDidMount() {
-
-    }
-
-    handleSubmit = (e, target) => {
-        e.preventDefault();
-        const {workflowQuery} = this.props.form.getFieldsValue();
-
-        if (workflowQuery) {
-            axios.get(
-                `${workflowAPI.getWorkflow}/${workflowQuery || 'workflowName'}`,
-            ).then(res => {
-                console.log(this.designerRef);
-                ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(this.designerRef));
-                this.setState({workflowData: rawToData(res.data), rawData: res.data});
-            }).catch(e => {
-                // handle error
-                console.info(e);
-            });
-        } else {
-            this.setState({workflowData: null})
-        }
-    };
-
-    updateWorkFlowDiagram = graphConfig => {
-        const nodes = graphConfig.nodes.map(item => ({
-
-            diagramType: "SHAPE",
-            componentId: item._cfg.model.id,
-            size: {
-                width: item._cfg.model.size[0],
-                height: item._cfg.model.size[1]
-            },
-            position: {
-                position_x: item._cfg.model.x,
-                position_y: item._cfg.model.y
-            }
-
-        }));
-        const edges = graphConfig.edges.map(item => ({
-            diagramType: "EDGE",
-            flowId: item._cfg.id,
-            sourceAnchor: item._cfg.model.sourceAnchor,
-            targetAnchor: item._cfg.model.targetAnchor
-        }));
-        console.log(this.state.rawData)
-
-        const diagrams = nodes.concat(edges);
-        const newRawData = {};
-        const request = Object.assign(newRawData, this.state.rawData);
-        const newR = Object.assign(newRawData, {diagrams: diagrams});
-        console.log(newR)
-
-        axios.put(`${workflowAPI.getWorkflow}`, request).then(res => {
-            console.log(res.status)
-        }).catch(e => console.info(e));
-
-    }
-
-    render() {
-        const data = this.state.workflowData;
-        const {getFieldDecorator} = this.props.form;
-        return (
-            <div>
-                <Layout>
-                    <SideBar/>
-                    <Layout>
-                        <Header
-                            style={{
-                                color: 'white',
-                                fontSize: 'large',
-                                fontWeight: '900'
-                            }}
-                        >
-                            Workflow Dashboard
-                        </Header>
-                        <Content
-                            style={{
-                                height: 'calc(100vh - 135px)',
-                                bottom: '0',
-                            }}
-                        >
-                            <Form layout="inline" onSubmit={this.handleSubmit}>
-                                <Form.Item>
-                                    {
-                                        getFieldDecorator('workflowQuery')(<Input
-                                            placeholder="请输入工作流名称"
-                                            type="text"
-                                            style={{margin: '0 24px', width: '240px'}}
-                                        />)
-                                    }
-                                </Form.Item>
-                                <Form.Item>
-                                    <Button type="primary" htmlType="submit">
-                                        查询
-                                    </Button>
-                                    <Button type="primary">更新</Button>
-                                </Form.Item>
-                            </Form>
-                            <Designer ref={(ref) => {
-                                this.designerRef = ref
-                            }} data={data} height={height} updateWorkFlowDiagram={this.updateWorkFlowDiagram} isView/>
-                        </Content>
-                        <Footer style={{textAlign: 'center'}}>
-                            Workflow UI Created by 精益引擎
-                        </Footer>
-                    </Layout>
-                </Layout>
-            </div>
-        );
-    }
+  return (
+      <BrowserRouter>
+        <Layout>
+          <SideBar/>
+          <Layout>
+            <Header
+                style={{
+                  color: 'white',
+                  fontSize: 'large',
+                  fontWeight: '900'
+                }}
+            >
+              Workflow Dashboard
+            </Header>
+            <Content
+                style={{
+                  height: 'calc(100vh - 135px)',
+                  bottom: '0',
+                }}
+            >
+              <Route path="/exists" component={ExistsWorkflow}/>
+              <Route path="/sample/:name" component={Sample} />
+            </Content>
+            <Footer style={{textAlign: 'center'}}>
+              Workflow UI Created by 精益引擎
+            </Footer>
+          </Layout>
+        </Layout>
+      </BrowserRouter>
+  );
 }
-
-export default Form.create({name: 'customized_form_controls'})(App);

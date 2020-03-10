@@ -1,8 +1,10 @@
-import {Icon, Menu, Layout} from 'antd';
 import React from 'react';
+import { Link } from 'react-router-dom'
+import {Icon, Menu, Layout} from 'antd';
+import './index.css';
 
 const { Sider } = Layout;
-const { SubMenu } = Menu
+const { SubMenu } = Menu;
 
 const SideBar = () => {
   return <Sider
@@ -15,11 +17,15 @@ const SideBar = () => {
     <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
       <Menu.Item key="1">
         <Icon type="pie-chart"/>
-        <span> 现有Workflow</span>
+        <Link to="/exists">
+          <span> 现有Workflow</span>
+        </Link>
       </Menu.Item>
       <Menu.Item key="2">
         <Icon type="plus"/>
-        <span> 新增Workflow</span>
+        <Link to="/add">
+          <span> 新增Workflow</span>
+        </Link>
       </Menu.Item>
       <SubMenu
           key="sub1"
@@ -32,15 +38,21 @@ const SideBar = () => {
       >
         <Menu.Item key="3">
             <Icon type="project" />
-            <span> 样例1</span>
+            <Link to="/sample/workflowName">
+              <span> 样例1</span>
+            </Link>
         </Menu.Item>
         <Menu.Item key="4">
           <Icon type="project" />
+          <Link to="/sample/workflowName100">
             <span> 样例2</span>
+          </Link>
         </Menu.Item>
         <Menu.Item key="5">
-            <Icon type="project" />
+          <Icon type="project" />
+          <Link to="/sample/workflowName200">
             <span> 样例3</span>
+          </Link>
         </Menu.Item>
       </SubMenu>
     </Menu>
