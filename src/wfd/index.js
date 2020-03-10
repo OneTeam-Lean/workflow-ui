@@ -17,11 +17,27 @@ import registerBehavior from './behavior'
 registerShape(G6);
 registerBehavior(G6);
 
-const minimap = new G6.Minimap({
-  size: [ 100, 100 ],
-  className: 'minimap',
-  type: 'delegate'
-});
+const tooltip = {
+  type: 'tooltip', // Node提示框
+  formatText(model) {
+    return `名称：${model.label || '暂无名称'}`;
+  },
+  shouldUpdate: e => {
+    return true;
+  },
+};
+
+const edgeTooltip = {
+  type: 'edge-tooltip',
+  formatText(model) {
+    const text = 'Source: ' + model.source
+        + '<br/> Target: ' + model.target;
+    return text;
+  },
+  shouldUpdate: e => {
+    return true;
+  },
+};
 
 const editBehavior = [
     'zoom-canvas',
@@ -60,6 +76,9 @@ class Designer extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if(prevProps.data !== this.props.data){
+      if (!this.props.data) {
+        return this.graph.clear();
+      }
       if(this.graph){
         this.graph.changeData(this.initShape(this.props.data));
         this.graph.setMode(this.props.mode);
@@ -70,6 +89,7 @@ class Designer extends Component {
         if(this.props.isView){
           this.graph.fitView(5);
         }
+        this.graph.refresh();
       }
     }
   }
@@ -87,7 +107,7 @@ class Designer extends Component {
       plugins = [this.cmdPlugin, toolbar, addItemPanel, canvasPanel];
     }
     this.graph = new G6.Graph({
-      plugins: [...plugins, minimap],
+      plugins: plugins,
       container: this.pageRef.current,
       height: height,
       width: width,
@@ -97,17 +117,7 @@ class Designer extends Component {
             'clickSelected',
         ],
         view: [],
-        edit: [...editBehavior,
-            {
-                type: 'tooltip', // Node提示框
-                formatText(model) {
-                    return `工作流名称：${model.label || '暂无名称'}`;
-                },
-                shouldUpdate: e => {
-                    return true;
-                },
-            },
-        ],
+        edit: [...editBehavior, tooltip, edgeTooltip],
       },
       defaultEdge: {
         shape: 'flow-polyline-round',
@@ -119,7 +129,7 @@ class Designer extends Component {
     }else{
       this.graph.setMode(mode);
     }
-    this.graph.data(this.props.data ? this.initShape(this.props.data) : {nodes:[],edges:[]});
+    this.graph.data(this.props.data ? this.initShape(this.props.data) : { nodes: null, edges: null });
     this.graph.render();
     if(isView && this.props.data && this.props.data.nodes){
       this.graph.fitView(5)

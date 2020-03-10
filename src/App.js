@@ -157,17 +157,20 @@ class App extends React.Component {
         e.preventDefault();
         const { workflowQuery } = this.props.form.getFieldsValue();
 
-        axios.get(
-            `${workflowAPI.getWorkflow}/${workflowQuery || 'workflowName'}`,
-            // 'https://www.fastmock.site/mock/e0f98190bbbc0813bc919a3a0bee31c8/workflow/workflow'
-        ).then(res => {
-          console.log(this.designerRef);
-          ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(this.designerRef));
-          this.setState({ workflowData: rawToData(res.data) });
-        }).catch(e => {
-          // handle error
-          console.info(e);
-        })
+        if (workflowQuery) {
+            axios.get(
+                `${workflowAPI.getWorkflow}/${workflowQuery || 'workflowName'}`,
+            ).then(res => {
+                console.log(this.designerRef);
+                ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(this.designerRef));
+                this.setState({ workflowData: rawToData(res.data) });
+            }).catch(e => {
+                // handle error
+                console.info(e);
+            });
+        } else {
+          this.setState({ workflowData: null })
+        }
     };
 
     render () {
