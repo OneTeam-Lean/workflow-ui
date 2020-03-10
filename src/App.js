@@ -1,148 +1,149 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './App.css';
-import { Layout, Menu, Icon, Form, Input, Select, Button } from 'antd';
+import {Layout, Menu, Icon, Form, Input, Select, Button} from 'antd';
 import Designer from './wfd';
 import axios from 'axios';
-import  {isEmpty} from 'lodash'
-import { rawToData } from './util/protocolUtil';
+import {isEmpty} from 'lodash'
+import {rawToData} from './util/protocolUtil';
 import SideBar from './wfd/components/SideBar';
 import workflowAPI from './api';
 
 const {Header, Footer, Content} = Layout;
 const demoData = {
-  "id": "be4767b1-324e-400a-b670-6c5d53e24c20",
-  "name": "workflowName",
-  "lanes": [
-    {
-      "id": null,
-      "name": "testLane",
-      "componentIds": null
-    }
-  ],
-  "components": [
-    {
-      "componentType": "Component",
-      "id": "startEventId",
-      "nextComponentIds": null
-    },
-    {
-      "componentType": "Component",
-      "id": null,
-      "nextComponentIds": null
-    },
-    {
-      "componentType": "Component",
-      "id": "autoTaskId",
-      "nextComponentIds": null
-    },
-    {
-      "componentType": "Component",
-      "id": null,
-      "nextComponentIds": null
-    },
-    {
-      "componentType": "Component",
-      "id": "manualTaskId",
-      "nextComponentIds": null
-    },
-    {
-      "componentType": "Component",
-      "id": null,
-      "nextComponentIds": null
-    },
-    {
-      "componentType": "Component",
-      "id": "endEventId",
-      "nextComponentIds": null
-    }
-  ],
-  "diagrams": [
-    {
-      "diagramType": "SHAPE",
-      "componentId": "startEventId",
-      "size": {
-        "width": 5,
-        "height": 10
-      },
-      "position": {
-        "position_x": 30,
-        "position_y": 40
-      }
-    },
-    {
-      "diagramType": "EDGE",
-      "flowId": "sequenceFlowId_1",
-      "sourceAnchor": 1,
-      "targetAnchor": 2
-    },
-    {
-      "diagramType": "SHAPE",
-      "componentId": "autoTaskId",
-      "size": {
-        "width": 10,
-        "height": 20
-      },
-      "position": {
-        "position_x": 30,
-        "position_y": 40
-      }
-    },
-    {
-      "diagramType": "EDGE",
-      "flowId": "sequenceFlowId_2",
-      "sourceAnchor": 1,
-      "targetAnchor": 3
-    },
-    {
-      "diagramType": "SHAPE",
-      "componentId": "autoTaskId",
-      "size": {
-        "width": 10,
-        "height": 20
-      },
-      "position": {
-        "position_x": 30,
-        "position_y": 40
-      }
-    },
-    {
-      "diagramType": "EDGE",
-      "flowId": "sequenceFlowId_3",
-      "sourceAnchor": 4,
-      "targetAnchor": 1
-    },
-    {
-      "diagramType": "SHAPE",
-      "componentId": "manualTaskId",
-      "size": {
-        "width": 10,
-        "height": 20
-      },
-      "position": {
-        "position_x": 30,
-        "position_y": 40
-      }
-    },
-    {
-      "diagramType": "SHAPE",
-      "componentId": "endEventId",
-      "size": {
-        "width": 5,
-        "height": 10
-      },
-      "position": {
-        "position_x": 30,
-        "position_y": 40
-      }
-    }
-  ],
-  "workflowExecutions": null
+    "id": "be4767b1-324e-400a-b670-6c5d53e24c20",
+    "name": "workflowName",
+    "lanes": [
+        {
+            "id": null,
+            "name": "testLane",
+            "componentIds": null
+        }
+    ],
+    "components": [
+        {
+            "componentType": "Component",
+            "id": "startEventId",
+            "nextComponentIds": null
+        },
+        {
+            "componentType": "Component",
+            "id": null,
+            "nextComponentIds": null
+        },
+        {
+            "componentType": "Component",
+            "id": "autoTaskId",
+            "nextComponentIds": null
+        },
+        {
+            "componentType": "Component",
+            "id": null,
+            "nextComponentIds": null
+        },
+        {
+            "componentType": "Component",
+            "id": "manualTaskId",
+            "nextComponentIds": null
+        },
+        {
+            "componentType": "Component",
+            "id": null,
+            "nextComponentIds": null
+        },
+        {
+            "componentType": "Component",
+            "id": "endEventId",
+            "nextComponentIds": null
+        }
+    ],
+    "diagrams": [
+        {
+            "diagramType": "SHAPE",
+            "componentId": "startEventId",
+            "size": {
+                "width": 5,
+                "height": 10
+            },
+            "position": {
+                "position_x": 30,
+                "position_y": 40
+            }
+        },
+        {
+            "diagramType": "EDGE",
+            "flowId": "sequenceFlowId_1",
+            "sourceAnchor": 1,
+            "targetAnchor": 2
+        },
+        {
+            "diagramType": "SHAPE",
+            "componentId": "autoTaskId",
+            "size": {
+                "width": 10,
+                "height": 20
+            },
+            "position": {
+                "position_x": 30,
+                "position_y": 40
+            }
+        },
+        {
+            "diagramType": "EDGE",
+            "flowId": "sequenceFlowId_2",
+            "sourceAnchor": 1,
+            "targetAnchor": 3
+        },
+        {
+            "diagramType": "SHAPE",
+            "componentId": "autoTaskId",
+            "size": {
+                "width": 10,
+                "height": 20
+            },
+            "position": {
+                "position_x": 30,
+                "position_y": 40
+            }
+        },
+        {
+            "diagramType": "EDGE",
+            "flowId": "sequenceFlowId_3",
+            "sourceAnchor": 4,
+            "targetAnchor": 1
+        },
+        {
+            "diagramType": "SHAPE",
+            "componentId": "manualTaskId",
+            "size": {
+                "width": 10,
+                "height": 20
+            },
+            "position": {
+                "position_x": 30,
+                "position_y": 40
+            }
+        },
+        {
+            "diagramType": "SHAPE",
+            "componentId": "endEventId",
+            "size": {
+                "width": 5,
+                "height": 10
+            },
+            "position": {
+                "position_x": 30,
+                "position_y": 40
+            }
+        }
+    ],
+    "workflowExecutions": null
 };
 
 const height = 600;
+
 class App extends React.Component {
-    designerRef= undefined;
+    designerRef = undefined;
 
     state = {
         workflowData: undefined,
@@ -150,13 +151,13 @@ class App extends React.Component {
 
     };
 
-    componentDidMount () {
+    componentDidMount() {
 
     }
 
     handleSubmit = (e, target) => {
         e.preventDefault();
-        const { workflowQuery } = this.props.form.getFieldsValue();
+        const {workflowQuery} = this.props.form.getFieldsValue();
 
         if (workflowQuery) {
             axios.get(
@@ -164,13 +165,13 @@ class App extends React.Component {
             ).then(res => {
                 console.log(this.designerRef);
                 ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(this.designerRef));
-                this.setState({ workflowData: rawToData(res.data) });
+                this.setState({workflowData: rawToData(res.data), rawData: res.data});
             }).catch(e => {
                 // handle error
                 console.info(e);
             });
         } else {
-          this.setState({ workflowData: null })
+            this.setState({workflowData: null})
         }
     };
 
@@ -195,11 +196,13 @@ class App extends React.Component {
             sourceAnchor: item._cfg.model.sourceAnchor,
             targetAnchor: item._cfg.model.targetAnchor
         }));
+        console.log(this.state.rawData)
 
         const diagrams = nodes.concat(edges);
         const newRawData = {};
         const request = Object.assign(newRawData, this.state.rawData);
         const newR = Object.assign(newRawData, {diagrams: diagrams});
+        console.log(newR)
 
         axios.put(`${workflowAPI.getWorkflow}`, request).then(res => {
             console.log(res.status)
@@ -209,20 +212,20 @@ class App extends React.Component {
 
     render() {
         const data = this.state.workflowData;
-        const { getFieldDecorator } = this.props.form;
+        const {getFieldDecorator} = this.props.form;
         return (
             <div>
                 <Layout>
-                    <SideBar />
+                    <SideBar/>
                     <Layout>
                         <Header
                             style={{
-                              color: 'white',
-                              fontSize: 'large',
-                              fontWeight: '900'
+                                color: 'white',
+                                fontSize: 'large',
+                                fontWeight: '900'
                             }}
                         >
-                          Workflow Dashboard
+                            Workflow Dashboard
                         </Header>
                         <Content
                             style={{
@@ -233,11 +236,11 @@ class App extends React.Component {
                             <Form layout="inline" onSubmit={this.handleSubmit}>
                                 <Form.Item>
                                     {
-                                      getFieldDecorator('workflowQuery')(<Input
-                                          placeholder="请输入工作流名称"
-                                          type="text"
-                                          style={{ margin: '0 24px', width: '240px' }}
-                                      />)
+                                        getFieldDecorator('workflowQuery')(<Input
+                                            placeholder="请输入工作流名称"
+                                            type="text"
+                                            style={{margin: '0 24px', width: '240px'}}
+                                        />)
                                     }
                                 </Form.Item>
                                 <Form.Item>
@@ -247,7 +250,9 @@ class App extends React.Component {
                                     <Button type="primary">更新</Button>
                                 </Form.Item>
                             </Form>
-                            <Designer ref={(ref) => {this.designerRef = ref }} data={data} height={height} updateWorkFlowDiagram={this.updateWorkFlowDiagram} isView/>
+                            <Designer ref={(ref) => {
+                                this.designerRef = ref
+                            }} data={data} height={height} updateWorkFlowDiagram={this.updateWorkFlowDiagram} isView/>
                         </Content>
                         <Footer style={{textAlign: 'center'}}>
                             Workflow UI Created by 精益引擎
@@ -259,4 +264,4 @@ class App extends React.Component {
     }
 }
 
-export default Form.create({ name: 'customized_form_controls' })(App);
+export default Form.create({name: 'customized_form_controls'})(App);
