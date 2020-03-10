@@ -236,10 +236,10 @@ class Designer extends Component {
     return (
       <LangContext.Provider value={{i18n,lang}}>
         <div className={styles.root}>
+          <div ref={this.pageRef} className={styles.canvasPanel} style={{height,width:isView?'100%':'70%',borderBottom:isView?0:null}}/>
           { !isView && <ToolbarPanel ref={this.toolbarRef} /> }
           <div>
             { !isView && <ItemPanel ref={this.itemPanelRef} height={height}/> }
-            <div ref={this.pageRef} className={styles.canvasPanel} style={{height,width:isView?'100%':'70%',borderBottom:isView?0:null}}/>
             { !isView && <DetailPanel ref={this.detailPanelRef}
                                       height={height}
                                       model={selectedModel}
