@@ -14,19 +14,19 @@ const SideBar = () => {
       style={{height: '100vh'}}
   >
     <div className="logo"/>
-    <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
+    <Menu theme="dark" mode="inline">
       <Menu.Item key="1">
         <Icon type="pie-chart"/>
         <Link to="/exists">
           <span> 现有Workflow</span>
         </Link>
       </Menu.Item>
-      <Menu.Item key="2">
+      {/* <Menu.Item key="2">
         <Icon type="plus"/>
         <Link to="/add">
           <span> 新增Workflow</span>
         </Link>
-      </Menu.Item>
+      </Menu.Item> */}
       <SubMenu
           key="sub1"
           title={

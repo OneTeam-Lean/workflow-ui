@@ -5,6 +5,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import SideBar from './wfd/components/SideBar';
 import ExistsWorkflow from './wfd/components/ExistsWorkflow';
 import Sample from './wfd/components/Sample';
+import Home from './wfd/components/Home';
 import './App.css';
 
 const {Header, Footer, Content} = Layout;
@@ -160,6 +161,7 @@ export default function App() {
                   bottom: '0',
                 }}
             >
+              <Route exact path="/" component={Home} />
               <Route path="/exists" component={ExistsWorkflow}/>
               <Route path="/sample/:name" component={Sample} />
             </Content>
