@@ -247,7 +247,7 @@ class App extends React.Component {
                                     <Button type="primary">更新</Button>
                                 </Form.Item>
                             </Form>
-                            <Designer ref={(ref) => {this.designerRef = ref }} data={data} height={height} isView/>
+                            <Designer ref={(ref) => {this.designerRef = ref }} data={data} height={height} updateWorkFlowDiagram={this.updateWorkFlowDiagram} isView/>
                         </Content>
                         <Footer style={{textAlign: 'center'}}>
                             Workflow UI Created by 精益引擎
