@@ -163,7 +163,7 @@ function ExistsWorkflow({ form }) {
     let isNodeSame = true;
     let isEdgeSame = true;
     for (let i = 0 ; i < nodes.length; i++) {
-      if (nodes[i].startTime !== wfNodes[i].startTime || nodes[i].endTime !== wfNodes[i].endTime) {
+      if (nodes[i].startDateTime !== wfNodes[i].startDateTime || nodes[i].endDateTime !== wfNodes[i].endDateTime) {
         isNodeSame = false;
         break;
       }
@@ -171,7 +171,7 @@ function ExistsWorkflow({ form }) {
 
     if (isNodeSame) {
       for (let i = 0 ; i < edges.length; i++) {
-        if (edges[i].startTime !== wfEdges[i].startTime || edges[i].endTime !== wfEdges[i].endTime) {
+        if (edges[i].startDateTime !== wfEdges[i].startDateTime || edges[i].endDateTime !== wfEdges[i].endDateTime) {
           isEdgeSame = false;
           break;
         }
