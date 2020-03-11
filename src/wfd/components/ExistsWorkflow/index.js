@@ -5,6 +5,7 @@ import Designer from '../../index';
 import axios from 'axios';
 import workflowAPI from '../../../api';
 import { rawToData } from '../../../util/protocolUtil';
+import LogModal from './LogModal'
 
 const height = 850;
 
@@ -13,6 +14,11 @@ function ExistsWorkflow({ form }) {
   const [workflowData, setWorkflowData] = useState(null);
   const [rawData, setRawData] = useState(null);
   const [isView, setIsView] = useState(true);
+
+  // log
+  const [showLogModal, setShowLogModal] = useState(false);
+  const [logData, setLogData] = useState([]);
+
   const rawDataRef = useRef(rawData);
   const workflowDataRef = useRef(workflowData);
   rawDataRef.current = rawData;
@@ -41,6 +47,27 @@ function ExistsWorkflow({ form }) {
       console.info(e);
     });
   }, [rawData, workflowData]);
+
+  const handleLogModalShow = () => {
+    console.log('rawData:', rawData)
+    if (!rawData) {
+      return message.warn('请先查询工作流')
+    }
+
+    axios.get(
+      // `${workflowAPI.getWorkflow}/${rawData.id}/executions`,
+      `${workflowAPI.getWorkflow}/7189754d-4e50-44b1-a75a-620d816f6205/executions`,
+    ).then(res => {
+      console.log(res)
+      if (res.data) {
+        setLogData(res.data)
+        setShowLogModal(true)
+      }
+    }).catch(e => {
+      // handle error
+      console.info(e);
+    });
+  }
 
   const updateWorkFlowDiagram = useCallback(graphConfig => {
     const originComponents = rawDataRef.current.components
@@ -176,6 +203,11 @@ function ExistsWorkflow({ form }) {
         {/*    onChange={val => setIsView(val)}*/}
         {/*  />*/}
         {/*</Form.Item>*/}
+        <Form.Item>
+          <Button type="primary" onClick={handleLogModalShow} >
+            查看日志
+          </Button>
+        </Form.Item>
       </Form>
       <Designer
         isView
@@ -184,7 +216,8 @@ function ExistsWorkflow({ form }) {
         height={ height }
         updateWorkFlowDiagram={ updateWorkFlowDiagram }
       />
-    </>;
+      {showLogModal ? <LogModal data={logData} onClose={() => setShowLogModal(false)} /> : null}
+    </>
 }
 
 function getExecutionStatus(component) {

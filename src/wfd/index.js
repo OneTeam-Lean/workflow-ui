@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import styles from './index.less';
 import G6 from '@antv/g6';
-import { Alert } from 'antd';
 import { getShapeName } from './util/clazz'
 import locale from './locales/index';
 import Command from './plugins/command'
@@ -283,21 +282,11 @@ class Designer extends Component {
       height,
       width: '100%',
       background: '#fff',
-
-    }
-
-    const titleStyle = {
-      height: '30px',
-      lineHeight: '30px',
-      fontSize: '30px',
-      fontWeight: 'bold',
-      color: '#333',
-      padding: '0 15px',
+      marginTop: '30px',
     }
 
     return (
       <div>
-        <h3 style={titleStyle}>Workflow:</h3>
         <div ref={this.pageRef} className={styles.canvasPanel} style={style}/>
       </div>
     )
