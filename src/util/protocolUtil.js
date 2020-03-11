@@ -4,6 +4,7 @@ const clazzMap = {
     'MANUAL_TASK': 'scriptTask',
     'END_EVENT'  : 'end',
     'CONDITIONAL_GATEWAY': 'exclusiveGateway',
+    'INTERMEDIATE_EVENT': '',
 };
 
 export function rawToData (rawData) {

@@ -217,6 +217,11 @@ export default function(G6) {
           stroke: this.options.style.stroke,
         }
       });
+
+      if (cfg.componentExecutionStatus) {
+        addBackgroundAnimate(cfg, group);
+      }
+
       this.runAnimate(cfg,group);
     },
   }, 'gateway-node');
