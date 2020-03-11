@@ -52,6 +52,10 @@
   box-shadow: rgb(174, 174, 174) 0px 0px 10px;
 }
 
+.ant-btn-primary {
+  margin: 0 4px;
+}
+
 .ant-layout-header {
   padding: 0 24px;
 }

@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, {useEffect, useRef, useState, useCallback } from 'react';
 import ReactDOM from 'react-dom';
-import {Button, Form, Input, Switch} from 'antd';
+import {Button, Form, Input, Switch, message} from 'antd';
 import Designer from '../../index';
 import axios from 'axios';
 import workflowAPI from '../../../api';
@@ -84,41 +84,86 @@ function ExistsWorkflow({ form }) {
 
   }, [rawDataRef]);
 
-  return <>
-      <Form layout="inline" onSubmit={handleSubmit}>
-        <Form.Item>
-          {
-            form.getFieldDecorator(
-                'workflowQuery',
-            )(<Input
-                placeholder="请输入工作流名称"
-                type="text"
-                style={{ margin: '0 24px', width: '240px' }}
-            />)
-          }
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            查询
-          </Button>
-        </Form.Item>
-        {/*<Form.Item>*/}
-        {/*  <Switch*/}
-        {/*    checkedChildren="查看模式"*/}
-        {/*    unCheckedChildren="编辑模式"*/}
-        {/*    checked={isView}*/}
-        {/*    onChange={val => setIsView(val)}*/}
-        {/*  />*/}
-        {/*</Form.Item>*/}
-      </Form>
-      <Designer
-          isView={isView}
-          ref={ designerRef }
-          data={ workflowData }
-          height={ height }
-          updateWorkFlowDiagram={ updateWorkFlowDiagram }
-      />
-  </>;
+  function handleRunning() {
+    try {
+      axios.post(
+          workflowAPI.runWorkflow(rawData.id),
+      ).then(res => {
+        const { workflowExecutionStatus } = res.data;
+        if (workflowExecutionStatus !== 'SUCCESS') {
+          return message.error('运行失败');
+        }
+
+        message.success('运行成功');
+
+        const components = (res.data['componentExecutions']);
+        let nodes = components.filter(res => res['component']['componentType'] !== 'SEQUENCE_FLOW');
+        let edges = components.filter(res => res['component']['componentType'] === 'SEQUENCE_FLOW');
+        nodes = workflowData.nodes.map(node => ({
+          ...node,
+          componentExecutionStatus: getExecutionStatus(
+            nodes.find(
+              resNode => resNode['component']['id'] === node.id
+            )
+          ),
+        }));
+        edges = workflowData.edges.map(edge => ({
+          ...edge,
+          componentExecutionStatus: getExecutionStatus(
+            edges.find(
+              resEdge => resEdge['component']['id'] === edge.id
+            )
+          ),
+        }));
+        setWorkflowData({nodes, edges});
+      });
+    } catch (e) {
+      console.info(e);
+    }
+  }
+
+    return <>
+        <Form layout="inline" onSubmit={handleSubmit}>
+          <Form.Item>
+            {
+              form.getFieldDecorator(
+                  'workflowQuery',
+              )(<Input
+                  placeholder="请输入工作流名称"
+                  type="text"
+                  style={{ margin: '0 24px', width: '240px' }}
+              />)
+            }
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              查询
+            </Button>
+            <Button type="primary" onClick={handleRunning}>
+              运行
+            </Button>
+          </Form.Item>
+          {/*<Form.Item>*/}
+          {/*  <Switch*/}
+          {/*    checkedChildren="查看模式"*/}
+          {/*    unCheckedChildren="编辑模式"*/}
+          {/*    checked={isView}*/}
+          {/*    onChange={val => setIsView(val)}*/}
+          {/*  />*/}
+          {/*</Form.Item>*/}
+        </Form>
+        <Designer
+            isView
+            ref={ designerRef }
+            data={ workflowData }
+            height={ height }
+            updateWorkFlowDiagram={ updateWorkFlowDiagram }
+        />
+    </>;
+}
+
+function getExecutionStatus(component) {
+  return component['componentExecutionData']['componentExecutionStatus']
 }
 
 export default Form.create({ name: 'customized_form_controls' })(ExistsWorkflow)

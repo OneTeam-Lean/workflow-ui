@@ -121,6 +121,38 @@ const catchDefaultOptions = {
   }
 };
 
+const ExecuteStatus = {
+  'SUCCESS': '#00ff00',
+  'FAILED': '#ff0000',
+  'PENDING': '#40a9ff',
+  'RUNNING': '#40a9ff',
+  'BLOCKED': '#ffff00',
+};
+
+function addBackgroundAnimate(cfg, group, shape = 'circle') {
+  const { componentExecutionStatus } = cfg;
+  let r
+  if (shape === 'circle') {
+    r = cfg.size[0] / 2;
+  }
+  const back1 = group.addShape(shape, generateBackgroundAnimateShape(-3, componentExecutionStatus, r));
+  const back2 = group.addShape(shape, generateBackgroundAnimateShape(-2, componentExecutionStatus, r));
+  const back3 = group.addShape(shape, generateBackgroundAnimateShape(-1, componentExecutionStatus, r));
+  group.sort(); // 排序，根据 zIndex 排序
+  back1.animate(
+    generateBackgroundAnimate(r),
+    generateAnimateCfg(0),
+  ); // 无延迟
+  back2.animate(
+    generateBackgroundAnimate(r),
+    generateAnimateCfg(1000),
+  ); // 1 秒延迟
+  back3.animate(
+    generateBackgroundAnimate(r),
+    generateAnimateCfg(2000),
+  ); // 2 秒延迟
+}
+
 export default function(G6) {
   G6.registerNode('task-node', {
     shapeType: 'rect',
@@ -251,6 +283,10 @@ export default function(G6) {
           stroke: this.options.style.stroke,
         }
       });
+
+      if (cfg.componentExecutionStatus) {
+        addBackgroundAnimate(cfg, group);
+      }
     },
     getAnchorPoints() {
       return [
@@ -291,6 +327,10 @@ export default function(G6) {
           stroke: this.options.style.stroke,
         }
       });
+
+      if (cfg.componentExecutionStatus) {
+        addBackgroundAnimate(cfg, group);
+      }
     },
     getAnchorPoints() {
       return [
@@ -422,4 +462,39 @@ export default function(G6) {
   G6.registerNode('message-catch-node', {
     options: deepMix({},catchDefaultOptions,{icon: require('assets/icons/flow/icon_message.svg')}),
   }, 'catch-node');
+}
+
+function generateAnimateCfg(delay) {
+  return {
+    delay,
+    duration: 3000,
+    easing: 'easeCubic',
+    callback: null,
+    repeat: true,
+  }
+}
+
+function generateBackgroundAnimate(radius = 15) {
+  return {
+    r: radius + 10,
+    opacity: 0.1,
+    repeat: true, // 循环
+  }
+}
+
+function generateBackgroundAnimateShape(zIndex, type = 'PENDING', radius) {
+  const bgColor = ExecuteStatus[type];
+
+  const animateObj = {
+    zIndex,
+    attrs: {
+      x: 0,
+      y: 0,
+      r: radius,
+      fill: bgColor,
+      opacity: 0.6
+    }
+  };
+
+  return radius ? { ...animateObj, r: radius } : animateObj;
 }
