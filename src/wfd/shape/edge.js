@@ -97,7 +97,7 @@ export default function(G6){
           }
         });
 
-        const duration = Math.max(1000, Math.round(Math.random() * 30) * 100);  // 1000 - 3000取值
+        // const duration = Math.max(1000, Math.round(Math.random() * 30) * 100);  // 1000 - 3000取值
 
         // 对圆点添加动画
         circle.animate(
@@ -114,7 +114,7 @@ export default function(G6){
             }
           },
           {
-            duration,
+            duration: 2000,
             repeat: true,
           }
         ); // 一次动画的时间长度

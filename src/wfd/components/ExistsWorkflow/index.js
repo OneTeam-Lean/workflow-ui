@@ -14,6 +14,7 @@ function ExistsWorkflow({ form }) {
   const [workflowData, setWorkflowData] = useState(null);
   const [rawData, setRawData] = useState(null);
   const [isView, setIsView] = useState(true);
+  const [timer, setTimer] = useState(-1);
 
   // log
   const [showLogModal, setShowLogModal] = useState(false);
@@ -23,6 +24,12 @@ function ExistsWorkflow({ form }) {
   const workflowDataRef = useRef(workflowData);
   rawDataRef.current = rawData;
   workflowDataRef.current = workflowData;
+
+  useEffect(() => {
+    return function clear() {
+      clearInterval(timer);
+    }
+  }, []);
 
   const handleSubmit = useCallback((e, target) => {
     e.preventDefault();
@@ -55,8 +62,7 @@ function ExistsWorkflow({ form }) {
     }
 
     axios.get(
-      // `${workflowAPI.getWorkflow}/${rawData.id}/executions`,
-      `${workflowAPI.getWorkflow}/7189754d-4e50-44b1-a75a-620d816f6205/executions`,
+      `${workflowAPI.getWorkflow}/${rawData.id}/executions`,
     ).then(res => {
       console.log(res)
       if (res.data) {
@@ -125,6 +131,58 @@ function ExistsWorkflow({ form }) {
 
   }, [rawDataRef]);
 
+  function updateWorkflowData(data) {
+    const { nodes: wfNodes, edges: wfEdges } = workflowDataRef.current;
+    const components = (data['componentExecutions']);
+    let nodes = components.filter(res => res['component']['componentType'] !== 'SEQUENCE_FLOW');
+    let edges = components.filter(res => res['component']['componentType'] === 'SEQUENCE_FLOW');
+
+    nodes = wfNodes.map(node => ({
+      ...node,
+      componentExecutionStatus: getExecutionStatus(
+        nodes.find(
+          resNode => resNode['component']['id'] === node.id
+        )
+      ),
+    }));
+    edges = wfEdges.map(edge => ({
+      ...edge,
+      componentExecutionStatus: getExecutionStatus(
+        edges.find(
+          resEdge => resEdge['component']['id'] === edge.id
+        )
+      ),
+    }));
+
+    // 如果workflowData中没有componentExecutionStatus，则直接更新
+    if (!wfNodes[0]['componentExecutionStatus']) {
+      return setWorkflowData({nodes, edges});
+    }
+
+    // 如果有新日志才更新 workflowData
+    let isNodeSame = true;
+    let isEdgeSame = true;
+    for (let i = 0 ; i < nodes.length; i++) {
+      if (nodes[i].startTime !== wfNodes[i].startTime || nodes[i].endTime !== wfNodes[i].endTime) {
+        isNodeSame = false;
+        break;
+      }
+    }
+
+    if (isNodeSame) {
+      for (let i = 0 ; i < edges.length; i++) {
+        if (edges[i].startTime !== wfEdges[i].startTime || edges[i].endTime !== wfEdges[i].endTime) {
+          isEdgeSame = false;
+          break;
+        }
+      }
+    }
+
+    if (!(isNodeSame && isEdgeSame)) {
+      setWorkflowData({nodes, edges});
+    }
+  }
+
   async function handleRunning() {
     try {
       await axios.get(
@@ -139,35 +197,15 @@ function ExistsWorkflow({ form }) {
       await axios.post(
           workflowAPI.runWorkflow(rawData.id),
       ).then(res => {
-
-        const { workflowExecutionStatus } = res.data;
-        if (workflowExecutionStatus !== 'SUCCESS') {
-          return message.error('运行失败');
+        if (res.data) {
+          setTimer(setInterval(async () => {
+            await axios.get(
+              `${workflowAPI.getWorkflow}/${rawData.id}/executions`,
+            ).then(res => {
+              updateWorkflowData(res.data[res.data.length - 1]);
+            }).catch(e => console.info(e));
+          }, 1500));
         }
-
-        message.success('运行成功');
-
-        const components = (res.data['componentExecutions']);
-        let nodes = components.filter(res => res['component']['componentType'] !== 'SEQUENCE_FLOW');
-        let edges = components.filter(res => res['component']['componentType'] === 'SEQUENCE_FLOW');
-
-        nodes = workflowDataRef.current.nodes.map(node => ({
-          ...node,
-          componentExecutionStatus: getExecutionStatus(
-            nodes.find(
-              resNode => resNode['component']['id'] === node.id
-            )
-          ),
-        }));
-        edges = workflowDataRef.current.edges.map(edge => ({
-          ...edge,
-          componentExecutionStatus: getExecutionStatus(
-            edges.find(
-              resEdge => resEdge['component']['id'] === edge.id
-            )
-          ),
-        }));
-        setWorkflowData({nodes, edges});
       });
     } catch (e) {
       console.info(e);
