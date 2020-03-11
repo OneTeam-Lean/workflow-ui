@@ -13,9 +13,10 @@ function ExistsWorkflow({ form }) {
   const [workflowData, setWorkflowData] = useState(null);
   const [rawData, setRawData] = useState(null);
   const [isView, setIsView] = useState(true);
-
   const rawDataRef = useRef(rawData);
+  const workflowDataRef = useRef(workflowData);
   rawDataRef.current = rawData;
+  workflowDataRef.current = workflowData;
 
   const handleSubmit = useCallback((e, target) => {
     e.preventDefault();
@@ -97,11 +98,21 @@ function ExistsWorkflow({ form }) {
 
   }, [rawDataRef]);
 
-  function handleRunning() {
+  async function handleRunning() {
     try {
-      axios.post(
+      await axios.get(
+        `${workflowAPI.getWorkflow}/${rawData.name}`,
+      ).then(res => {
+        if (res.data) {
+          setWorkflowData(rawToData(res.data));
+          setRawData(res.data);
+        }
+      });
+
+      await axios.post(
           workflowAPI.runWorkflow(rawData.id),
       ).then(res => {
+
         const { workflowExecutionStatus } = res.data;
         if (workflowExecutionStatus !== 'SUCCESS') {
           return message.error('运行失败');
@@ -112,7 +123,8 @@ function ExistsWorkflow({ form }) {
         const components = (res.data['componentExecutions']);
         let nodes = components.filter(res => res['component']['componentType'] !== 'SEQUENCE_FLOW');
         let edges = components.filter(res => res['component']['componentType'] === 'SEQUENCE_FLOW');
-        nodes = workflowData.nodes.map(node => ({
+
+        nodes = workflowDataRef.current.nodes.map(node => ({
           ...node,
           componentExecutionStatus: getExecutionStatus(
             nodes.find(
@@ -120,7 +132,7 @@ function ExistsWorkflow({ form }) {
             )
           ),
         }));
-        edges = workflowData.edges.map(edge => ({
+        edges = workflowDataRef.current.edges.map(edge => ({
           ...edge,
           componentExecutionStatus: getExecutionStatus(
             edges.find(
@@ -136,42 +148,42 @@ function ExistsWorkflow({ form }) {
   }
 
     return <>
-        <Form layout="inline" onSubmit={handleSubmit}>
-          <Form.Item>
-            {
-              form.getFieldDecorator(
-                  'workflowQuery',
-              )(<Input
-                  placeholder="请输入工作流名称"
-                  type="text"
-                  style={{ margin: '0 24px', width: '240px' }}
-              />)
-            }
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              查询
-            </Button>
-            <Button type="primary" onClick={handleRunning}>
-              运行
-            </Button>
-          </Form.Item>
-          {/*<Form.Item>*/}
-          {/*  <Switch*/}
-          {/*    checkedChildren="查看模式"*/}
-          {/*    unCheckedChildren="编辑模式"*/}
-          {/*    checked={isView}*/}
-          {/*    onChange={val => setIsView(val)}*/}
-          {/*  />*/}
-          {/*</Form.Item>*/}
-        </Form>
-        <Designer
-            isView
-            ref={ designerRef }
-            data={ workflowData }
-            height={ height }
-            updateWorkFlowDiagram={ updateWorkFlowDiagram }
-        />
+      <Form layout="inline" onSubmit={handleSubmit}>
+        <Form.Item>
+          {
+            form.getFieldDecorator(
+                'workflowQuery',
+            )(<Input
+                placeholder="请输入工作流名称"
+                type="text"
+                style={{ margin: '0 24px', width: '240px' }}
+            />)
+          }
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            查询
+          </Button>
+          <Button type="primary" onClick={handleRunning}>
+            运行
+          </Button>
+        </Form.Item>
+        {/*<Form.Item>*/}
+        {/*  <Switch*/}
+        {/*    checkedChildren="查看模式"*/}
+        {/*    unCheckedChildren="编辑模式"*/}
+        {/*    checked={isView}*/}
+        {/*    onChange={val => setIsView(val)}*/}
+        {/*  />*/}
+        {/*</Form.Item>*/}
+      </Form>
+      <Designer
+        isView
+        ref={ designerRef }
+        data={ workflowData }
+        height={ height }
+        updateWorkFlowDiagram={ updateWorkFlowDiagram }
+      />
     </>;
 }
 
