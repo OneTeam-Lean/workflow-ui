@@ -1,4 +1,12 @@
-import editorStyle from "../util/defaultStyle";
+import editorStyle from '../util/defaultStyle';
+
+const ExecuteStatus = {
+  'SUCCESS': '#00ff00',
+  'FAILED': '#ff0000',
+  'PENDING': '#40a9ff',
+  'RUNNING': '#40a9ff',
+  'BLOCKED': '#ffff00',
+};
 
 const uniqBy = (arr,key)=>{
   const result = [];
@@ -71,6 +79,44 @@ export default function(G6){
       group.toBack();
       label.toFront();
       return label;
+    },
+    afterDraw(cfg, group) {
+      if (cfg.componentExecutionStatus) {
+        // 获得当前边的第一个图形，这里是边本身的 path
+        const shape = group.get('children')[0];
+        // 边 path 的起点位置
+        const startPoint = shape.getPoint(0);
+
+        // 添加 circle 图形
+        const circle = group.addShape('circle', {
+          attrs: {
+            x: startPoint.x,
+            y: startPoint.y,
+            fill: ExecuteStatus[cfg.componentExecutionStatus],
+            r: 3
+          }
+        });
+
+        // 对圆点添加动画
+        circle.animate(
+          {
+            // 每一帧的操作，入参 ratio：这一帧的比例值（Number）。返回值：这一帧需要变化的参数集（Object）。
+            onFrame(ratio) {
+              // 根据比例值，获得在边 path 上对应比例的位置。
+              const tmpPoint = shape.getPoint(ratio);
+              // 返回需要变化的参数集，这里返回了位置 x 和 y
+              return {
+                x: tmpPoint.x,
+                y: tmpPoint.y
+              };
+            }
+          },
+          {
+            duration: 3000,
+            repeat: true,
+          }
+        ); // 一次动画的时间长度
+      }
     },
     afterUpdate(cfg, item){
       const label = item.getContainer().findByClassName('edge-label');
