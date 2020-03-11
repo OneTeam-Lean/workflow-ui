@@ -6,7 +6,7 @@ import axios from 'axios';
 import workflowAPI from '../../../api';
 import { rawToData } from '../../../util/protocolUtil';
 
-const height = 850;
+const height = 700;
 
 function ExistsWorkflow({ form }) {
   const designerRef = useRef(null);
