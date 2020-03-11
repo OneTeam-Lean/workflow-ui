@@ -16,7 +16,11 @@ const EditNodeModal = ({ onConfirm, onCancel, editNode }) => {
       onOk={handleOk}
       onCancel={onCancel}
     >
-      <Input defaultValue={labelValue} onChange={e => setLabelValue(e.currentTarget.value)} />
+      <Input
+        placeholder="请输入名称"
+        defaultValue={labelValue}
+        onChange={e => setLabelValue(e.currentTarget.value)}
+      />
     </Modal>
   )
 };
