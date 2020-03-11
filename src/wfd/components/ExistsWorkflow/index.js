@@ -30,7 +30,7 @@ function ExistsWorkflow({ form }) {
           return setWorkflowData(null);
         }
         console.log(designerRef);
-        ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(designerRef.current));
+        // ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(designerRef.current));
         setWorkflowData(rawToData(res.data));
         setRawData(res.data);
       }).catch(e => {
