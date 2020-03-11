@@ -144,6 +144,8 @@ function ExistsWorkflow({ form }) {
           resNode => resNode['component']['id'] === node.id
         )
       ),
+      startDateTime: nodes.find(resNode => resNode['component']['id'] === node.id)['startDateTime'],
+      endDateTime: nodes.find(resNode => resNode['component']['id'] === node.id)['endDateTime'],
     }));
     edges = wfEdges.map(edge => ({
       ...edge,
@@ -156,7 +158,7 @@ function ExistsWorkflow({ form }) {
 
     // 如果workflowData中没有componentExecutionStatus，则直接更新
     if (!wfNodes[0]['componentExecutionStatus']) {
-      return setWorkflowData({nodes, edges});
+      return setWorkflowData({ nodes, edges });
     }
 
     // 如果有新日志才更新 workflowData
