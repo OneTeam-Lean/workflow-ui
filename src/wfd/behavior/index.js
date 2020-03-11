@@ -7,6 +7,7 @@ import hoverAnchorActived from './hoverAnchorActived'
 import hoverNodeActived from './hoverNodeActived'
 import itemAlign from './itemAlign'
 import dragPoint from "./dragPoint";
+import clickEdit from './clickEdit'
 export default function(G6, updateWorkFlowDiagram){
   clickSelected(G6);
   deleteItem(G6);
@@ -17,4 +18,5 @@ export default function(G6, updateWorkFlowDiagram){
   hoverNodeActived(G6);
   itemAlign(G6);
   dragPoint(G6);
+  clickEdit(G6);
 }

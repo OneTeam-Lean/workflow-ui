@@ -1,11 +1,6 @@
 import React from 'react';
 import './App.css';
-import {Layout, Menu, Icon, Form, Input, Select, Button, Switch} from 'antd';
-import Designer from './wfd';
-import axios from 'axios';
-import {isEmpty} from 'lodash'
-import {rawToData} from './util/protocolUtil';
-import {Layout, Menu, Icon, Form, Input, Select, Button} from 'antd';
+import {Layout} from 'antd';
 import { BrowserRouter, Route } from 'react-router-dom';
 import SideBar from './wfd/components/SideBar';
 import ExistsWorkflow from './wfd/components/ExistsWorkflow';

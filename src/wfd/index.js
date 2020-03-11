@@ -12,6 +12,7 @@ import LangContext from "./util/context";
 import DetailPanel from "./components/DetailPanel";
 import ItemPanel from "./components/ItemPanel";
 import ToolbarPanel from "./components/ToolbarPanel";
+import EditNodeModal from "./components/DetailPanel/EditNodeModal"
 import registerShape from './shape'
 import registerBehavior from './behavior'
 registerShape(G6);
@@ -47,6 +48,7 @@ const editBehavior = [
     'dragEdge',
     'dragPanelItemAddNode',
     'clickSelected',
+    'clickEdit',
     'deleteItem',
     'itemAlign',
     'dragPoint',
@@ -70,6 +72,9 @@ class Designer extends Component {
         signalDefs: [],
         messageDefs: [],
       },
+
+      showEditNodeModal: false,
+      editNode: null
     };
   }
 
@@ -129,6 +134,7 @@ class Designer extends Component {
     }else{
       this.graph.setMode(mode);
     }
+    console.log(this.props.data)
     this.graph.data(this.props.data ? this.initShape(this.props.data) : { nodes: null, edges: null });
     this.graph.render();
     if(isView && this.props.data && this.props.data.nodes){
@@ -164,6 +170,16 @@ class Designer extends Component {
         this.setState({selectedModel: this.state.processModel});
       }
     });
+
+    this.graph.on('afterEditNodeSelected',(item) => {
+      // console.log('afterEditNodeSelected', item)
+      this.setState({
+        showEditNodeModal: true,
+        editNode: item,
+      })
+    })
+
+
     const page = this.pageRef.current;
     const graph = this.graph;
     const height = this.props.height-1;
@@ -226,10 +242,41 @@ class Designer extends Component {
     return null;
   }
 
+  handleEditNodeConfirm = (val) => {
+    const { editNode } = this.state;
+
+    this.setState({
+      showEditNodeModal: false,
+      editNode: null,
+    })
+
+    editNode.update({ label: val })
+
+    this.props.updateWorkFlowDiagram(this.graph.cfg)
+  }
+
+  handleEditNodeCancel = () => {
+    console.log('handleEditNodeCancel')
+    this.setState({ showEditNodeModal: false })
+  }
+
+  renderEditNodeModal() {
+    const { showEditNodeModal, editNode } = this.state;
+
+    if (!showEditNodeModal) {
+      return null
+    }
+    return <EditNodeModal
+      editNode={editNode}
+      onConfirm={this.handleEditNodeConfirm}
+      onCancel={this.handleEditNodeCancel}
+    />
+  }
+
   render() {
     const height = this.props.height;
     const { isView,mode,users,groups,lang } = this.props;
-    const { selectedModel,processModel } = this.state;
+    const { selectedModel,processModel, showEditNodeModal, editNode } = this.state;
     const { signalDefs, messageDefs } = processModel;
     const i18n = locale[lang.toLowerCase()];
     const readOnly = mode !== "edit";
@@ -252,6 +299,7 @@ class Designer extends Component {
             }
           </div>
         </div>
+        {this.renderEditNodeModal()}
       </LangContext.Provider>
     );
   }
