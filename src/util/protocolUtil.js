@@ -25,6 +25,7 @@ export function rawToData (rawData) {
     }));
     let resEdges = edges.map(edge => ({
         id          : edge['id'],
+        label       : edge['name'],
         source      : edge['fromComponentId'],
         target      : edge['nextComponentIds'][0],
         sourceAnchor: 1,

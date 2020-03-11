@@ -8,7 +8,7 @@ export default function(G6) {
     getEvents() {
       return {
         'node:dblclick': 'onClick',
-
+        'edge:dblclick': 'onClick',
       };
     },
     onClick(e) {

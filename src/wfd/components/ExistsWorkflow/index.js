@@ -6,7 +6,7 @@ import axios from 'axios';
 import workflowAPI from '../../../api';
 import { rawToData } from '../../../util/protocolUtil';
 
-const height = 750;
+const height = 850;
 
 function ExistsWorkflow({ form }) {
   const designerRef = useRef(null);
@@ -47,7 +47,7 @@ function ExistsWorkflow({ form }) {
       const model = item.getModel()
 
       const component = originComponents.find(c => c.id === model.id)
-      console.log('component:', component)
+      // console.log('component:', component)
       // update label
       if (component) {
         component.name = model.label
@@ -65,12 +65,25 @@ function ExistsWorkflow({ form }) {
         }
       }
     });
-    const edges = graphConfig.edges.map(item => ({
-      diagramType: "EDGE",
-      flowId: item.get('id'),
-      sourceAnchor: item.getModel().sourceAnchor,
-      targetAnchor: item.getModel().targetAnchor
-    }));
+    const edges = graphConfig.edges.map(item => {
+
+      const model = item.getModel()
+      console.log(model)
+
+      const component = originComponents.find(c => c.id === model.id)
+      console.log('component:', component)
+      // update label
+      if (component) {
+        component.name = model.label
+      }
+
+      return {
+        diagramType: "EDGE",
+        flowId: item.get('id'),
+        sourceAnchor: item.getModel().sourceAnchor,
+        targetAnchor: item.getModel().targetAnchor
+      }
+    });
 
     const diagrams = nodes.concat(edges);
     const newRawData = {};

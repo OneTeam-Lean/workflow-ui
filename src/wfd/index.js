@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import styles from './index.less';
 import G6 from '@antv/g6';
+import { Alert } from 'antd';
 import { getShapeName } from './util/clazz'
 import locale from './locales/index';
 import Command from './plugins/command'
@@ -273,9 +274,37 @@ class Designer extends Component {
     />
   }
 
-  render() {
+  renderCanvas() {
     const height = this.props.height;
-    const { isView,mode,users,groups,lang } = this.props;
+
+    const style = {
+      border: '1px solid #ddd',
+      overflow: 'hidden',
+      height,
+      width: '100%',
+      background: '#fff',
+
+    }
+
+    const titleStyle = {
+      height: '30px',
+      lineHeight: '30px',
+      fontSize: '30px',
+      fontWeight: 'bold',
+      color: '#333',
+      padding: '0 15px',
+    }
+
+    return (
+      <div>
+        <h3 style={titleStyle}>Workflow:</h3>
+        <div ref={this.pageRef} className={styles.canvasPanel} style={style}/>
+      </div>
+    )
+  }
+
+  render() {
+    const { isView,mode,users,groups,lang,height } = this.props;
     const { selectedModel,processModel, showEditNodeModal, editNode } = this.state;
     const { signalDefs, messageDefs } = processModel;
     const i18n = locale[lang.toLowerCase()];
@@ -283,7 +312,7 @@ class Designer extends Component {
     return (
       <LangContext.Provider value={{i18n,lang}}>
         <div className={styles.root}>
-          <div ref={this.pageRef} className={styles.canvasPanel} style={{height,width:isView?'100%':'70%',borderBottom:isView?0:null}}/>
+          {this.renderCanvas()}
           { !isView && <ToolbarPanel ref={this.toolbarRef} /> }
           <div>
             { !isView && <ItemPanel ref={this.itemPanelRef} height={height}/> }
