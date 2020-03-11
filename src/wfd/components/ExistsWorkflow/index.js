@@ -55,8 +55,8 @@ function ExistsWorkflow({ form }) {
     }
 
     axios.get(
-      // `${workflowAPI.getWorkflow}/${rawData.id}/executions`,
-      `${workflowAPI.getWorkflow}/7189754d-4e50-44b1-a75a-620d816f6205/executions`,
+      `${workflowAPI.getWorkflow}/${rawData.id}/executions`,
+      // `${workflowAPI.getWorkflow}/c37f618c-cefc-46b2-a279-325cd3fa286b/executions`,
     ).then(res => {
       console.log(res)
       if (res.data) {
