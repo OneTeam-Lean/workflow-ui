@@ -11,10 +11,17 @@ const LogModal = ({ onClose, data }) => {
 
   const renderComponents = (componentExecutions) => {
     return componentExecutions.map((item, index) => {
+      let duration = ''
+
+      if (item.startDateTime) {
+        duration = `${moment(item.startDateTime).format(COMPONENT_FORMAT)} - ${item.endDateTime ? moment(item.endDateTime).format(COMPONENT_FORMAT) : ''}，`
+      }
+      console.log(item)
+      const status = item.componentExecutionData && item.componentExecutionData.componentExecutionStatus ? item.componentExecutionData.componentExecutionStatus : ''
       return (
         <div key={index} style={{marginBottom: '10px'}}>
           {item.component.name || item.componentId}：
-          <div>{moment(item.startDateTime).format(COMPONENT_FORMAT)} - {moment(item.startDateTime).format(COMPONENT_FORMAT)}，{item.componentExecutionData.componentExecutionStatus}</div>
+          <div>{duration}{status}</div>
         </div>
       )
     })
@@ -24,7 +31,7 @@ const LogModal = ({ onClose, data }) => {
     return data.map((item, index) => {
       return (
         <List.Item key={index} style={{border: 'none'}}>
-          <Card title={`时间：${moment(item.startDateTime).format(FORMAT)} - ${moment(item.endDateTime).format(FORMAT)}， 状态：${item.workflowExecutionStatus}`}>
+          <Card title={`时间：${moment(item.startDateTime).format(FORMAT)} - ${item.endDateTime ? moment(item.endDateTime).format(FORMAT) : ''}， 状态：${item.workflowExecutionStatus}`}>
             {renderComponents(item.componentExecutions)}
           </Card>
         </List.Item>
@@ -34,7 +41,6 @@ const LogModal = ({ onClose, data }) => {
 
   return (
     <Modal
-      width={700}
       title="查看日志"
       visible
       onOk={onClose}

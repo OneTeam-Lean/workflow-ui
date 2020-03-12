@@ -73,6 +73,7 @@ function ExistsWorkflow({ form }) {
         setShowLogModal(true)
       }
     }).catch(e => {
+      message.error('请求出错，请稍后再试')
       // handle error
       console.info(e);
     });
