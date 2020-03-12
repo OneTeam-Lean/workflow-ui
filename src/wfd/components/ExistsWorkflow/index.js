@@ -195,7 +195,16 @@ function ExistsWorkflow({ form }) {
 
     if (running) {
       setRunning(false);
-      return clearInterval(timer);
+      clearInterval(timer);
+      await axios.get(
+        `${workflowAPI.getWorkflow}/${rawData.name}`,
+      ).then(res => {
+        if (res.data) {
+          setWorkflowData(rawToData(res.data));
+          setRawData(res.data);
+        }
+      }).catch(e => console.info(e));
+      return;
     }
 
     try {
