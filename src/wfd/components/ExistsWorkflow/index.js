@@ -15,6 +15,7 @@ function ExistsWorkflow({ form }) {
   const [rawData, setRawData] = useState(null);
   const [isView, setIsView] = useState(true);
   const [timer, setTimer] = useState(-1);
+  const [running, setRunning] = useState(false);
 
   // log
   const [showLogModal, setShowLogModal] = useState(false);
@@ -27,7 +28,9 @@ function ExistsWorkflow({ form }) {
 
   useEffect(() => {
     return function clear() {
-      clearInterval(timer);
+      if (timer !== -1) {
+        clearInterval(timer);
+      }
     }
   }, []);
 
@@ -186,6 +189,15 @@ function ExistsWorkflow({ form }) {
   }
 
   async function handleRunning() {
+    if (!rawData) {
+      return message.warn('请先查询工作流')
+    }
+
+    if (running) {
+      setRunning(false);
+      return clearInterval(timer);
+    }
+
     try {
       await axios.get(
         `${workflowAPI.getWorkflow}/${rawData.name}`,
@@ -207,10 +219,12 @@ function ExistsWorkflow({ form }) {
               updateWorkflowData(res.data[res.data.length - 1]);
             }).catch(e => console.info(e));
           }, 1500));
+          setRunning(true);
         }
       });
     } catch (e) {
       console.info(e);
+      setRunning(false);
     }
   }
 
@@ -231,8 +245,11 @@ function ExistsWorkflow({ form }) {
           <Button type="primary" htmlType="submit">
             查询
           </Button>
-          <Button type="primary" onClick={handleRunning}>
-            运行
+          <Button
+            type={running ? 'danger' : 'primary'}
+            onClick={handleRunning}
+          >
+            {running ? '停止' : '运行'}
           </Button>
         </Form.Item>
         {/*<Form.Item>*/}
